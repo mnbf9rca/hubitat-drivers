@@ -1,6 +1,9 @@
  /**
   *  Davis WeatherLink Live Hubitat Driver
   *  https://www.davisinstruments.com/weatherlinklive/
+*
+* from https://github.com/bradsjm/hubitat-drivers/blob/main/Weather/DavisWeatherLinkLive.groovy
+*
   *
   *  MIT License
   *  Copyright 2019 Jonathan Bradshaw (jb@nrgup.net)
@@ -29,7 +32,8 @@ metadata {
     definition (
         name: 'Davis WeatherLink Live',
         namespace: 'nrgup',
-        author: 'Jonathan Bradshaw'
+        author: 'Jonathan Bradshaw / mnbf9rca',
+        importUrl: 'https://github.com/mnbf9rca/hubitat-drivers/blob/main/Weather/DavisWeatherLinkLive.groovy'
     ) {
         capability 'Polling'
         capability 'Relative Humidity Measurement'
@@ -226,13 +230,13 @@ private void parseWeatherData(Map json) {
                         break
                 }
                 if (logEnable) { log.debug "Rain multiplier code ${c.rain_size} is ${rainMultiplier} ${rainUnit}" }
-                events << newEvent('temperature', c.temp, 'F')
+                events << newEvent('temperature', fahrenheitToCelsius(c.temp), 'C')
                 events << newEvent('humidity', c.hum, '%')
-                events << newEvent('dewPoint', c.dew_point, 'F')
-                events << newEvent('heatIndex', c.heat_index, 'F')
-                events << newEvent('windChill', c.wind_chill, 'F')
-                events << newEvent('wetBulb', c.wet_bulb, 'F')
-                events << newEvent('feelsLike', c.thw_index, 'F')
+                events << newEvent('dewPoint', fahrenheitToCelsius(c.dew_point), 'C')
+                events << newEvent('heatIndex', fahrenheitToCelsius(c.heat_index), 'C')
+                events << newEvent('windChill', fahrenheitToCelsius(c.wind_chill), 'C')
+                events << newEvent('wetBulb', fahrenheitToCelsius(c.wet_bulb), 'C')
+                events << newEvent('feelsLike', fahrenheitToCelsius(c.thw_index), 'C')
                 events << newEvent('ultravioletIndex', c.uv_index, 'uvi')
                 events << newEvent('rxState', c.rx_state)
                 events << newEvent('batteryFlag', c.trans_battery_flag)
