@@ -33,7 +33,7 @@ metadata {
         name: 'Davis WeatherLink Live',
         namespace: 'nrgup',
         author: 'Jonathan Bradshaw / mnbf9rca',
-        importUrl: 'https://github.com/mnbf9rca/hubitat-drivers/blob/main/Weather/DavisWeatherLinkLive.groovy'
+        importUrl: 'https://raw.githubusercontent.com/mnbf9rca/hubitat-drivers/main/Weather/DavisWeatherLinkLive.groovy'
     ) {
         capability 'Polling'
         capability 'Relative Humidity Measurement'
