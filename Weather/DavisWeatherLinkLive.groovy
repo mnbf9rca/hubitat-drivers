@@ -2,7 +2,8 @@
   *  Davis WeatherLink Live Hubitat Driver
   *  https://www.davisinstruments.com/weatherlinklive/
 *
-* from https://github.com/bradsjm/hubitat-drivers/blob/main/Weather/DavisWeatherLinkLive.groovy
+* originally at https://github.com/bradsjm/hubitat-drivers/blob/main/Weather/DavisWeatherLinkLive.groovy
+* now at https://github.com/mnbf9rca/hubitat-drivers/edit/main/Weather/DavisWeatherLinkLive.groovy
 *
   *
   *  MIT License
@@ -154,6 +155,11 @@ void updated() {
     poll()
 }
 
+private BigDecimal RoundedFtoC(BigDecimal f) {
+    BigDecimal c = fahrenheitToCelsius(f) 
+    return(c.setScale(1,BigDecimal.ROUND_HALF_UP) )
+}
+
 // Poll Weatherlink for latest conditions
 void poll() {
     Map params = [
@@ -230,13 +236,13 @@ private void parseWeatherData(Map json) {
                         break
                 }
                 if (logEnable) { log.debug "Rain multiplier code ${c.rain_size} is ${rainMultiplier} ${rainUnit}" }
-                events << newEvent('temperature', fahrenheitToCelsius(c.temp), 'C')
+                events << newEvent('temperature', RoundedFtoC(c.temp), 'C')
                 events << newEvent('humidity', c.hum, '%')
-                events << newEvent('dewPoint', fahrenheitToCelsius(c.dew_point), 'C')
-                events << newEvent('heatIndex', fahrenheitToCelsius(c.heat_index), 'C')
-                events << newEvent('windChill', fahrenheitToCelsius(c.wind_chill), 'C')
-                events << newEvent('wetBulb', fahrenheitToCelsius(c.wet_bulb), 'C')
-                events << newEvent('feelsLike', fahrenheitToCelsius(c.thw_index), 'C')
+                events << newEvent('dewPoint', RoundedFtoC(c.dew_point), 'C')
+                events << newEvent('heatIndex', RoundedFtoC(c.heat_index), 'C')
+                events << newEvent('windChill', RoundedFtoC(c.wind_chill), 'C')
+                events << newEvent('wetBulb', RoundedFtoC(c.wet_bulb), 'C')
+                events << newEvent('feelsLike', RoundedFtoC(c.thw_index), 'C')
                 events << newEvent('ultravioletIndex', c.uv_index, 'uvi')
                 events << newEvent('rxState', c.rx_state)
                 events << newEvent('batteryFlag', c.trans_battery_flag)
@@ -278,7 +284,7 @@ private void parseWeatherData(Map json) {
                 break
             case 4:
                 if (logEnable) { log.debug "[${device.displayName}] Received Base Temperature/Humidity data" }
-                events << newEvent('insideTemperature', c.temp_in, 'F')
+                events << newEvent('insideTemperature', RoundedFtoC(c.temp_in), 'C')
                 events << newEvent('insideHumidity', c.hum_in, '%')
                 events << newEvent('dewPointInside', c.dew_point_in, 'F')
                 events << newEvent('heatIndexInside', c.heat_index_in, 'F')
